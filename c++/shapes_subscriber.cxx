@@ -53,12 +53,11 @@ void process_data(dds::sub::DataReader< ::ShapeTypeExtended> reader, unsigned in
     for (auto sample : samples) {
         if (sample.info().valid()) {
             ++sample_count;
-            cout << "Live sample data: " << sample.data() << endl;
+            if (sample.info().extensions().topic_query_guid() != rti::core::Guid::unknown())
+                cout << "Queried sample data: " << sample.data() << endl; 
+            else
+                cout << "Live sample data: " << sample.data() << endl;
         } 
-        else if (sample.info().extensions().topic_query_guid() != rti::core::Guid::unknown()) {
-            ++sample_count;
-            cout << "Queried sample data: " << sample.data() << endl;  
-        }           
         else {
             cout << "Instance state changed to "
                 << sample.info().state().instance_state() << endl;
